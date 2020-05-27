@@ -1,0 +1,30 @@
+{
+  "name": "nibbas-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@keyv/mysql": "^1.1.4",
+    "ajax": "0.0.4",
+    "discord.js": "^12.2.0",
+    "jquery": "^3.5.1",
+    "jquery-ajax": "^2.1.4",
+    "jsdom": "^16.2.2",
+    "keyv": "^4.0.1",
+    "node-fetch": "^2.6.0",
+    "sequelize": "^5.21.7",
+    "sqlite3": "^4.2.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}

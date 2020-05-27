@@ -47,7 +47,7 @@ client.on("message", async  msg => {
                     if(params.length >= 1){
                         if(msg.mentions.users.size === 0) custom(msg,"you have to mention someone !!!");
                         else if(params[0].indexOf(msg.mentions.users.entries().next().value[0]) === -1) custom(msg,"?bigup [user]");
-                        else if(msg.author.id === msg.mentions.users.entries().next().value[0]) custom(msg,"you can't bigup yourself !!!");
+                        else if(msg.author.id === msg.mentions.users.entries().next().value[0]) bigupme(msg,msg.author.id);
                         else {
                             save(msg.author.id,msg.mentions.users.entries().next().value[0],1);
                             custom(msg,"You bigup "+getUser(msg.mentions.users.entries().next().value[0]).username);
@@ -69,18 +69,16 @@ client.on("message", async  msg => {
                     else custom(msg,"?pane [user]");
                 }
                 break;
-                case "thebest": thebest(msg);
-                break;
-                case "bigupme": bigupme(msg,msg.author.id);
+                case "rank": thebest(msg);
                 break;
                 case "help":{
                     const embed = new Discord.MessageEmbed()
                     .setColor('#0099ff')
-                    .setTitle("**Commands**");
-                    embed.addField("bigup","?bigup [user]");
-                    embed.addField("pane","?pane [user]");
-                    embed.addField("My infos","?bigupme");
-                    embed.addField("Rank","?thebest");
+                    .setTitle("**Commands**")
+                    .addField("Give someone a point","?bigup [user]")
+                    .addField("Remove a point from someone","?pane [user]")
+                    .addField("My infos","?bigup [my name]")
+                    .addField("Rank","?rank");
                     msg.reply(embed);
                 }
                 break;
@@ -140,15 +138,17 @@ async function thebest(msg){
         const embed = new Discord.MessageEmbed()
         .setColor('#0099ff')
         .setTitle("**The best**");
+        var send = false ;
         totals.forEach( t=> {
             var ele = t.dataValues;
-            if(getUser(ele.to)) embed.addField(getUser(ele.to).username,ele.total+" points");
+            if(getUser(ele.to)) {
+                embed.addField(getUser(ele.to).username,ele.total+" points");
+                send = true ;
+            }
         });
-        msg.reply(embed);
+        if(send === true) msg.reply(embed);
     }
-    else custom("No infos !!!");
-
-
+    else custom(msg,"No infos !!!");
 }
 async function bigupme(msg,to){
     const ele = await best.findAll({ where: {to:to} });
@@ -164,112 +164,6 @@ async function bigupme(msg,to){
     }
     else custom(msg,"You got nothing !!!");
 }
-
-
-
-
-
-
-
 function getUser(id){
     return client.users.cache.get(id);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*const Discord = require("discord.js")
-const client = new Discord.Client()
-
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('discord', 'root', '', {
-	host: 'localhost',
-	dialect: 'mysql',
-	logging: false
-});
-const word_fire = sequelize.define('word_fire', {
-	id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-	value: Sequelize.TEXT,
-    type:{
-        type: Sequelize.STRING,
-        allowNull: false, 
-        defaultValue:"word"
-    },
-	flag: {
-        type: Sequelize.BOOLEAN, 
-        allowNull: false, 
-        defaultValue: 1
-    }
-});
-const PREFIX = '?';
-
-
-client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`)
-  word_fire.sync();
-})
-client.on("message", async  msg => {
-    Check_Search(msg);
-    Check_Event(msg);
-    if (isNotNormal(msg)) return;
-    if (msg.content.startsWith(PREFIX)) {
-		const params = msg.content.slice(PREFIX.length).split(' ');
-        const command = params.shift();
-		if(command.trim() !== "") doExec(msg,command,params);
-	}
-});
-client.login("NzA3NTU4NTI4NTQ1NTg3Mjcw.XrKmHg.xLXcTc7wNfZT1-N778KwM64GAJI")
-
-
-
-async function doExec(msg,cmd,params){
-    
-}
-function isNotNormal(msg) {return msg.author.bot /*||  msg.author.id == user ;}
-async function save(type,val,flag = 1){
-    const ele = await word_fire.findOne({ where: { value: val,type:type} });
-    if(ele){
-        ele.flag = flag;
-        await ele.save();
-    }
-    else{
-        await word_fire.create({
-            value: val,
-            type : type
-        });
-    }
-}
-function From_DM(msg){ return msg && msg.author && msg.author.bot && msg.author.username === "Dank Memer" ;}
-function Check_Event(msg){
-    if(From_DM(msg) && msg.content.toLowerCase().indexOf("typ") != -1){
-        var text = msg.content.match(/\`([^)]+)\`/)[1];
-        if(text.indexOf('`') === -1 && text.toLowerCase().indexOf("event") === -1){
-            if(msg.content.toLowerCase().indexOf("typing") !== -1) text += ":repeat";
-            save('fire',text);
-        }
-    }
-}
-function Check_Search(msg){
-    if(From_DM(msg) && msg.content.indexOf("Where do you want to search? Pick from the list below and type it in chat") !== -1){
-        var tmp = msg.content.substr(msg.content.lastIndexOf(".")+1,msg.content.length-1).split("`, `");
-        let vals = [];
-        tmp.forEach(function(e){
-            vals.push(e.replace('`','').replace(' ','').replace(' ','').trim());
-        });
-        if(vals.length > 0) save("word",vals.join());
-    }
-}*/

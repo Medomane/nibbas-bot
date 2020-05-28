@@ -53,14 +53,14 @@ client.on("message", async  msg => {
                             custom(msg,"You bigup "+getUser(msg.mentions.users.entries().next().value[0]).username);
                         }
                     }
-                    else custom(msg,"?bigup [user]");
+                    else bigupme(msg,msg.author.id);
                 }
                 break;
                 case "pane":{
                     if(params.length >= 1){
                         if(msg.mentions.users.size === 0) custom(msg,"you have to mention someone !!!");
                         else if(params[0].indexOf(msg.mentions.users.entries().next().value[0]) === -1) custom(msg,"?pane [user]");
-                        else if(msg.author.id === msg.mentions.users.entries().next().value[0]) custom(msg,"you can't pane yourself !!!");
+                        else if(msg.author.id === msg.mentions.users.entries().next().value[0]) custom(msg,"you can't pane your self !!!");
                         else {
                             save(msg.author.id,msg.mentions.users.entries().next().value[0],-1);
                             custom(msg,"You pane "+getUser(msg.mentions.users.entries().next().value[0]).username);
@@ -77,7 +77,7 @@ client.on("message", async  msg => {
                     .setTitle("**Commands**")
                     .addField("Give someone a point","?bigup [user]")
                     .addField("Remove a point from someone","?pane [user]")
-                    .addField("My infos","?bigup [my name]")
+                    .addField("My infos","?bigup")
                     .addField("Rank","?rank");
                     msg.reply(embed);
                 }
